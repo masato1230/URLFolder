@@ -2,7 +2,7 @@ package com.jp_funda.urlfolder.Models;
 
 import java.util.Date;
 
-public class URL {
+public class Url {
     private int id;
     private String url;
     private String memo;

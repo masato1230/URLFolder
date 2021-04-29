@@ -1,8 +1,12 @@
 package com.jp_funda.urlfolder.Activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -16,6 +20,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.util.function.Predicate;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +52,19 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        // 初回起動の判定を行う
+        SharedPreferences prefs = getSharedPreferences("IsFirstPref", Context.MODE_PRIVATE);
+        boolean isFirst = prefs.getBoolean("is_first", true);
+
+        if (isFirst) {
+            // todo 初回起動時はRootFolderとGoogleUrlのデータを作成する。
+            Toast.makeText(this, "First", Toast.LENGTH_LONG).show();
+        }
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("is_first", false);
+        editor.commit();
     }
 
     @Override
