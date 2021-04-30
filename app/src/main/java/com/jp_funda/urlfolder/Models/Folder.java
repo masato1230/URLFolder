@@ -1,5 +1,6 @@
 package com.jp_funda.urlfolder.Models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +14,8 @@ public class Folder {
     private boolean isSecret;
     private boolean isRoot;
     private String password;
-    private List<Integer> urlIds;
-    private List<Integer> childIds;
+    private List<Url> urls;
+    private List<Folder> childFolders;
 
     public int getId() {
         return id;
@@ -88,19 +89,19 @@ public class Folder {
         this.password = password;
     }
 
-    public List<Integer> getURLIds() {
-        return urlIds;
+    public List<Url> getUrls() {
+        return urls;
     }
 
-    public void setURLIds(List<Integer> urlIds) {
-        this.urlIds = urlIds;
+    public void setUrls(List<Url> urls) {
+        this.urls = urls;
     }
 
-    public List<Integer> getChildIds() {
-        return childIds;
+    public List<Folder> getChildFolders() {
+        return childFolders;
     }
 
-    public void setChildIds(List<Integer> childIds) {
-        this.childIds = childIds;
+    public void setChildFolders(List<Folder> childFolders) {
+        this.childFolders = childFolders;
     }
 }

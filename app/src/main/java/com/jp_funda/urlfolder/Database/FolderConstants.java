@@ -1,6 +1,7 @@
 package com.jp_funda.urlfolder.Database;
 
 import java.sql.Struct;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -20,4 +21,6 @@ public class FolderConstants {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_URL_IDS = "urlIds";
     public static final String KEY_CHILD_IDS = "childIds";
+
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 }
