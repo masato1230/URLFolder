@@ -1,5 +1,6 @@
 package com.jp_funda.urlfolder.Models;
 
+import java.net.URL;
 import java.util.Date;
 
 public class Url {
