@@ -14,7 +14,7 @@ public class Folder {
     private boolean isRoot;
     private String password;
     private List<Integer> urlIds;
-    private List<Integer> ChildIds;
+    private List<Integer> childIds;
 
     public int getId() {
         return id;
@@ -97,10 +97,10 @@ public class Folder {
     }
 
     public List<Integer> getChildIds() {
-        return ChildIds;
+        return childIds;
     }
 
     public void setChildIds(List<Integer> childIds) {
-        ChildIds = childIds;
+        this.childIds = childIds;
     }
 }

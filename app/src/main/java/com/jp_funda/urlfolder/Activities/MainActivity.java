@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         boolean isFirst = prefs.getBoolean("is_first", true);
 
         if (isFirst) {
-            // todo 初回起動時はRootFolderとGoogleUrlのデータを作成する。
             Toast.makeText(this, "First", Toast.LENGTH_LONG).show();
         }
 
