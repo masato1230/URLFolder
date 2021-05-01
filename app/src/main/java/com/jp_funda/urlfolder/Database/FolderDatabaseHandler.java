@@ -2,6 +2,7 @@ package com.jp_funda.urlfolder.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -10,6 +11,8 @@ import androidx.annotation.Nullable;
 import com.jp_funda.urlfolder.Models.Folder;
 import com.jp_funda.urlfolder.Models.Url;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -80,7 +83,59 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
     }
 
     // get one
+    public Folder getOneFolder(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Folder folder = new Folder();
 
+        Cursor cursor = db.query(
+                FolderConstants.TABLE_NAME,
+                new String[] {
+                        FolderConstants.KEY_ID,
+                        FolderConstants.KEY_TITLE,
+                        FolderConstants.KEY_COLOR_INT,
+                        FolderConstants.KEY_PARENT_ID,
+                        FolderConstants.KEY_MEMO,
+                        FolderConstants.KEY_CREATED_DATE,
+                        FolderConstants.KEY_IS_SECRET,
+                        FolderConstants.KEY_IS_ROOT,
+                        FolderConstants.KEY_PASSWORD,
+                        FolderConstants.KEY_URL_IDS,
+                        FolderConstants.KEY_CHILD_IDS
+                },
+                FolderConstants.KEY_ID + "=?",
+                new String[] {String.valueOf(id)},
+                null,  null,  null);
+        if (cursor == null) {
+            return null;
+        }
+        cursor.moveToFirst();
+        folder.setId(id);
+        folder.setTitle(cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_TITLE)));
+        folder.setColorInt(cursor.getInt(cursor.getColumnIndex(FolderConstants.KEY_COLOR_INT)));
+        folder.setParentId(cursor.getInt(cursor.getColumnIndex(FolderConstants.KEY_PARENT_ID)));
+        folder.setMemo(cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_MEMO)));
+        try {
+            folder.setCreatedDate(FolderConstants.dateFormat.parse(cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_CREATED_DATE))));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        folder.setSecret(1 == cursor.getInt(cursor.getColumnIndex(FolderConstants.KEY_IS_SECRET)));
+        folder.setRoot(1 == cursor.getInt(cursor.getColumnIndex(FolderConstants.KEY_IS_ROOT)));
+        folder.setPassword(cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_PASSWORD)));
+        // todo urls
+        folder.setUrls();
+        // childFolders
+        List<Folder> childFolders = new ArrayList<>();
+        String childFolderIdsString = cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_CHILD_IDS));
+        String[] childFolderStringSplit = childFolderIdsString.split(",");
+        for (String childFolderIdString: childFolderStringSplit) {
+            Folder childFolder = this.getOneFolder(Integer.parseInt(childFolderIdString));
+            childFolders.add(childFolder);
+        }
+        folder.setChildFolders(childFolders);
+
+        return folder;
+    }
     // get all
     // update
     // delete

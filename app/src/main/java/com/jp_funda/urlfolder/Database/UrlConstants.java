@@ -1,5 +1,6 @@
 package com.jp_funda.urlfolder.Database;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UrlConstants {
@@ -8,10 +9,14 @@ public class UrlConstants {
     public static final String TABLE_NAME = "urlTable";
     // table columns
     public static final String KEY_ID = "id";
+    public static final String KEY_TITLE = "title";
     public static final String KEY_URL = "url";
     public static final String KEY_MEMO = "memo";
     public static final String KEY_ADDED_DATE = "addedDate";
     public static final String KEY_BROWSING_DATE = "browsingDate";
     public static final String KEY_FOLDER_ID = "folderId";
     public static final String KEY_BROWSER_ID = "browserId";
+
+    // date format
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Url {
     private int id;
+    private String title;
     private String url;
     private String memo;
     private Date AddedDate;
@@ -18,6 +19,14 @@ public class Url {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getUrl() {
