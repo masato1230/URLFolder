@@ -128,12 +128,14 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
         // childFolders
         List<Folder> childFolders = new ArrayList<>();
         String childFolderIdsString = cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_CHILD_IDS));
-        String[] childFolderStringSplit = childFolderIdsString.split(",");
-        for (String childFolderIdString: childFolderStringSplit) {
-            Folder childFolder = this.getOneFolder(Integer.parseInt(childFolderIdString));
-            childFolders.add(childFolder);
+        if (childFolderIdsString != null) {
+            String[] childFolderStringSplit = childFolderIdsString.split(",");
+            for (String childFolderIdString: childFolderStringSplit) {
+                Folder childFolder = this.getOneFolder(Integer.parseInt(childFolderIdString));
+                childFolders.add(childFolder);
+            }
+            folder.setChildFolders(childFolders);
         }
-        folder.setChildFolders(childFolders);
 
         cursor.close();
         return folder;
@@ -184,12 +186,14 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
             // childFolders
             List<Folder> childFolders = new ArrayList<>();
             String childFolderIdsString = cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_CHILD_IDS));
-            String[] childFolderStringSplit = childFolderIdsString.split(",");
-            for (String childFolderIdString: childFolderStringSplit) {
-                Folder childFolder = this.getOneFolder(Integer.parseInt(childFolderIdString));
-                childFolders.add(childFolder);
+            if (childFolderIdsString != null) {
+                String[] childFolderStringSplit = childFolderIdsString.split(",");
+                for (String childFolderIdString: childFolderStringSplit) {
+                    Folder childFolder = this.getOneFolder(Integer.parseInt(childFolderIdString));
+                    childFolders.add(childFolder);
+                }
+                folder.setChildFolders(childFolders);
             }
-            folder.setChildFolders(childFolders);
 
             folderList.add(folder);
         } while (cursor.moveToNext());
@@ -197,18 +201,6 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
         cursor.close();
         return folderList;
     }
-
-//    private int id;
-//    private String title;
-//    private int colorInt;
-//    private int parentId;
-//    private String memo;
-//    private Date createdDate;
-//    private boolean isSecret;
-//    private boolean isRoot;
-//    private String password;
-//    private List<Url> urls;
-//    private List<Folder> childFolders;
 
     // update
     public int updateFolder(Folder folder) {

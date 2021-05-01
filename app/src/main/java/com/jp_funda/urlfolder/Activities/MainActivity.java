@@ -11,6 +11,10 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.jp_funda.urlfolder.Database.FolderDatabaseHandler;
+import com.jp_funda.urlfolder.Database.UrlDatabaseHandler;
+import com.jp_funda.urlfolder.Models.Folder;
+import com.jp_funda.urlfolder.Models.Url;
 import com.jp_funda.urlfolder.R;
 
 import androidx.navigation.NavController;
@@ -21,6 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.Date;
 import java.util.function.Predicate;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,6 +64,36 @@ public class MainActivity extends AppCompatActivity {
 
         if (isFirst) {
             Toast.makeText(this, "First", Toast.LENGTH_LONG).show();
+            // 初回起動時の処理
+            FolderDatabaseHandler folderDB = new FolderDatabaseHandler(this);
+            UrlDatabaseHandler urlDB = new UrlDatabaseHandler(this);
+            // create folder
+            Folder folder = new Folder();
+            folder.setTitle("Google");
+            folder.setColorInt(1);
+            folder.setParentId(-1);
+            folder.setMemo("Example Folder");
+            folder.setCreatedDate(new Date());
+            folder.setSecret(false);
+            folder.setRoot(true);
+            folder.setPassword(null);
+            folder.setUrls(null);
+            folder.setChildFolders(null);
+            folderDB.addFolder(folder);
+
+            // create url => google.com and add to folder
+            Url url = new Url();
+            url.setTitle("Google");
+            url.setUrl("https://www.google.com/");
+            url.setMemo("url example");
+            url.setAddedDate(new Date());
+            url.setBrowsingDate(new Date());
+            url.setFolderId(1);
+            url.setBrowserId(1);
+            urlDB.addUrl(url);
+            // update folderDB
+            folder.setUrls(urlDB.getForOneFolder(1));
+            folderDB.updateFolder(folder);
         }
 
         SharedPreferences.Editor editor = prefs.edit();
