@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/row_folder_status_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/ic_folder_status"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -17,9 +17,9 @@
     <ImageView
         android:id="@+id/row_folder_icon"
         android:padding="5dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="40dp"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:src="@drawable/ic_folder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,8 +27,8 @@
     <TextView
         android:id="@+id/row_folder_title"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="120dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="100dp"
         android:gravity="center_vertical"
         android:text="TitleTitle"
         android:textColor="@color/white"
@@ -40,8 +40,8 @@
         android:id="@+id/row_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical" />

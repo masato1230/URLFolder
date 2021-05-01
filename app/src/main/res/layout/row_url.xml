@@ -7,8 +7,8 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:padding="7dp"
         android:src="@drawable/ic_url"
         android:layout_marginLeft="50dp"
@@ -18,8 +18,8 @@
     <TextView
         android:id="@+id/row_url_title"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="120dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="100dp"
         android:gravity="center_vertical"
         android:text="TitleTitle"
         android:textColor="@color/white"

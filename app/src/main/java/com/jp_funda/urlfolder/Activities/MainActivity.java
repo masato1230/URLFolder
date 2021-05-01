@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             UrlDatabaseHandler urlDB = new UrlDatabaseHandler(this);
             // create folder
             Folder folder = new Folder();
-            folder.setTitle("Google");
+            folder.setTitle("Root");
             folder.setColorInt(1);
             folder.setParentId(-1);
             folder.setMemo("Example Folder");
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
             // create url => google.com and add to folder
             Url url = new Url();
-            url.setTitle("Google");
+            url.setTitle("google");
             url.setUrl("https://www.google.com/");
             url.setMemo("url example");
             url.setAddedDate(new Date());
