@@ -239,6 +239,14 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
     // delete
     public void deleteFolder(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        // delete urls included in the deleting folder
+        List<Url> deletingUrls = urlDB.getForOneFolder(id);
+        for (Url url: deletingUrls) {
+            urlDB.deleteUrl(url.getId());
+        }
+
+        // delete the folder data
         db.delete(FolderConstants.TABLE_NAME, FolderConstants.KEY_ID + "=?", new String[] {String.valueOf(id)});
     }
 

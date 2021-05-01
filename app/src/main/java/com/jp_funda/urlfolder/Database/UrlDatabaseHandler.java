@@ -182,7 +182,7 @@ public class UrlDatabaseHandler extends SQLiteOpenHelper {
     // delete
     public void deleteUrl(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(UrlConstants.TABLE_NAME, UrlConstants.KEY_ID + "=?",new String[]{String.valueOf(id)});
+        db.delete(UrlConstants.TABLE_NAME, UrlConstants.KEY_ID + "=?", new String[]{String.valueOf(id)});
     }
 
     // get count
