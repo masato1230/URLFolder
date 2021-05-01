@@ -1,9 +1,12 @@
 package com.jp_funda.urlfolder.Activities.ui.home;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -19,6 +22,8 @@ import com.jp_funda.urlfolder.Models.Folder;
 import com.jp_funda.urlfolder.Models.Url;
 import com.jp_funda.urlfolder.R;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -68,6 +73,9 @@ public class HomeFragment extends Fragment {
         rowFolderView.setTag(folder);
         folderTitle.setText(folder.getTitle());
 
+        // clickListeners
+        rowFolderView.setOnClickListener(this::onRowFolderClick);
+
         // inflate child folders
         if (folder.getChildFolders() != null) {
             for (Folder childFolder: folder.getChildFolders()) {
@@ -92,5 +100,70 @@ public class HomeFragment extends Fragment {
         urlTitle.setText(url.getTitle());
 
         return rowUrlView;
+    }
+
+    // click listeners
+    private void onRowFolderClick(View view) {
+        Folder handlingFolder = (Folder) view.getTag();
+
+        // show dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Select what to do with " + handlingFolder.getTitle() +  " folder");
+        builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // todo Edit dialog
+            }
+        });
+        builder.setPositiveButton(R.string.create_folder, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                AlertDialog.Builder createFolderDialogBuilder = new AlertDialog.Builder(getActivity());
+                // todo show create folder dialog
+                // create dialog Views
+                EditText titleEditText = new EditText(getActivity());
+                titleEditText.setHint("New folder title");
+
+                // set views to dialog builder
+                createFolderDialogBuilder.setTitle(R.string.new_folder);
+                createFolderDialogBuilder.setMessage("Please enter a title for the new folder");
+                createFolderDialogBuilder.setView(titleEditText);
+                createFolderDialogBuilder.setNegativeButton(R.string.cancel, null);
+                createFolderDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // save new folder to database
+                        Folder newFolder = new Folder();
+                        newFolder.setTitle(titleEditText.getText().toString());
+                        newFolder.setCreatedDate(new Date());
+                        newFolder.setParentId(handlingFolder.getId());
+                        int newFolderID = (int) folderDB.addFolder(newFolder);
+                        // update newFolder by database
+                        newFolder = folderDB.getOneFolder(newFolderID);
+                        // update parentFolder(handlingFolder)
+                        List<Folder> updatedChildFolders;
+                        if (handlingFolder.getChildFolders() != null) {
+                            updatedChildFolders = handlingFolder.getChildFolders();
+                        } else {
+                            updatedChildFolders = new ArrayList<>();
+                        }
+                        updatedChildFolders.add(newFolder);
+                        handlingFolder.setChildFolders(updatedChildFolders);
+                        folderDB.updateFolder(handlingFolder);
+                        dialog.dismiss();
+                        // todo set password dialog
+                    }
+                });
+                createFolderDialogBuilder.create().show();
+            }
+        });
+        builder.setNegativeButton(R.string.add_url, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // todo
+            }
+        });
+        builder.create().show();
     }
 }
