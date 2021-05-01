@@ -151,6 +151,7 @@ public class UrlDatabaseHandler extends SQLiteOpenHelper {
                 }
                 url.setFolderId(cursor.getInt(cursor.getColumnIndex(UrlConstants.KEY_FOLDER_ID)));
                 url.setBrowserId(cursor.getInt(cursor.getColumnIndex(UrlConstants.KEY_BROWSER_ID)));
+                urlList.add(url);
             } while (cursor.moveToNext());
         }
         cursor.close();
