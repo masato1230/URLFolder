@@ -64,7 +64,7 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
         values.put(FolderConstants.KEY_IS_ROOT, folder.isRoot() ? 1 : 0);
         values.put(FolderConstants.KEY_PASSWORD, folder.getPassword());
         StringBuilder urlIdsStringBuilder = new StringBuilder();
-        if (folder.getUrls() != null && folder.getUrls().size() > 1) {
+        if (folder.getUrls() != null && folder.getUrls().size() > 0) {
             for (Url url: folder.getUrls()) {
                 String urlId = String.valueOf(url.getId());
                 urlIdsStringBuilder.append(urlId + ",");
@@ -73,7 +73,7 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
             values.put(FolderConstants.KEY_URL_IDS, urlIdsStringBuilder.toString());
         }
         StringBuilder childIdsStringBuilder = new StringBuilder();
-        if (folder.getChildFolders() != null && folder.getUrls().size() > 1) {
+        if (folder.getChildFolders() != null && folder.getChildFolders().size() > 0) {
             for (Folder childFolder: folder.getChildFolders()) {
                 String childId = String.valueOf(childFolder.getId());
                 childIdsStringBuilder.append(childId + ",");
@@ -225,7 +225,7 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
             values.put(FolderConstants.KEY_URL_IDS, urlIdsStringBuilder.toString());
         }
         StringBuilder childIdsStringBuilder = new StringBuilder();
-        if (folder.getChildFolders() != null && folder.getUrls().size() > 1) {
+        if (folder.getChildFolders() != null && folder.getChildFolders().size() > 0) {
             for (Folder childFolder: folder.getChildFolders()) {
                 String childId = String.valueOf(childFolder.getId());
                 childIdsStringBuilder.append(childId + ",");

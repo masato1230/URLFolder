@@ -113,7 +113,36 @@ public class HomeFragment extends Fragment {
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // todo Edit dialog
+                AlertDialog.Builder editDialogBuilder = new AlertDialog.Builder(getActivity());
+                EditText newFolderTitle = new EditText(getActivity());
+                newFolderTitle.setHint("New folder title");
+
+                editDialogBuilder.setTitle("Edit / Delete folder");
+                editDialogBuilder.setView(newFolderTitle);
+                editDialogBuilder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // todo update folderDb
+                    }
+                });
+                editDialogBuilder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // delete folder
+                        folderDB.deleteFolder(handlingFolder.getId());
+                        // update parent folder
+                        Folder parentFolder = folderDB.getOneFolder(handlingFolder.getParentId());
+                        List<Folder> updatedParentChildFolders = parentFolder.getChildFolders();
+                        updatedParentChildFolders.remove(handlingFolder);
+                        parentFolder.setChildFolders(updatedParentChildFolders);
+                        folderDB.updateFolder(parentFolder);
+
+                        // redraw scrollView
+                        updateScrollView();
+                    }
+                });
+                editDialogBuilder.setNeutralButton(R.string.cancel, null);
+                editDialogBuilder.create().show();
             }
         });
         builder.setPositiveButton(R.string.create_folder, new DialogInterface.OnClickListener() {
@@ -154,8 +183,7 @@ public class HomeFragment extends Fragment {
                         folderDB.updateFolder(handlingFolder);
                         dialog.dismiss();
                         // redraw scrollView
-                        scrollView.removeAllViews();
-                        scrollView.addView(inflateFolderView(rootFolder));
+                        updateScrollView();
                         // todo set password dialog
                     }
                 });
@@ -195,8 +223,7 @@ public class HomeFragment extends Fragment {
                         folderDB.updateFolder(handlingFolder);
 
                         // redraw scrollView
-                        scrollView.removeAllViews();
-                        scrollView.addView(inflateFolderView(rootFolder));
+                        updateScrollView();
                     }
                 });
                 addUrlDialogBuilder.setNegativeButton(R.string.cancel, null);
@@ -205,5 +232,18 @@ public class HomeFragment extends Fragment {
             }
         });
         builder.create().show();
+    }
+
+    public void updateScrollView() {
+        scrollView.removeAllViews();
+        // set folders data to views
+        rootFolder = null;
+        for (Folder folder: folderDB.getAllFolder()) {
+            if (folder.isRoot()) {
+                rootFolder = folder;
+                break;
+            }
+        }
+        scrollView.addView(inflateFolderView(rootFolder));
     }
 }
