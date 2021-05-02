@@ -128,7 +128,7 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
         // childFolders
         List<Folder> childFolders = new ArrayList<>();
         String childFolderIdsString = cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_CHILD_IDS));
-        if (childFolderIdsString != null) {
+        if (childFolderIdsString != null && !childFolderIdsString.equals("")) {
             String[] childFolderStringSplit = childFolderIdsString.split(",");
             for (String childFolderIdString: childFolderStringSplit) {
                 Folder childFolder = this.getOneFolder(Integer.parseInt(childFolderIdString));
@@ -186,7 +186,7 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
             // childFolders
             List<Folder> childFolders = new ArrayList<>();
             String childFolderIdsString = cursor.getString(cursor.getColumnIndex(FolderConstants.KEY_CHILD_IDS));
-            if (childFolderIdsString != null) {
+            if (childFolderIdsString != null && !childFolderIdsString.equals("")) {
                 String[] childFolderStringSplit = childFolderIdsString.split(",");
                 for (String childFolderIdString: childFolderStringSplit) {
                     Folder childFolder = this.getOneFolder(Integer.parseInt(childFolderIdString));
@@ -222,8 +222,8 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
                 urlIdsStringBuilder.append(urlId + ",");
             }
             urlIdsStringBuilder.setLength(urlIdsStringBuilder.length()-1); // 余分なコンマを削除
-            values.put(FolderConstants.KEY_URL_IDS, urlIdsStringBuilder.toString());
         }
+        values.put(FolderConstants.KEY_URL_IDS, urlIdsStringBuilder.toString());
         StringBuilder childIdsStringBuilder = new StringBuilder();
         if (folder.getChildFolders() != null && folder.getChildFolders().size() > 0) {
             for (Folder childFolder: folder.getChildFolders()) {
@@ -231,8 +231,8 @@ public class FolderDatabaseHandler extends SQLiteOpenHelper {
                 childIdsStringBuilder.append(childId + ",");
             }
             childIdsStringBuilder.setLength(childIdsStringBuilder.length()-1);
-            values.put(FolderConstants.KEY_CHILD_IDS, childIdsStringBuilder.toString());
         }
+        values.put(FolderConstants.KEY_CHILD_IDS, childIdsStringBuilder.toString());
         return db.update(FolderConstants.TABLE_NAME, values, FolderConstants.KEY_ID + "=?", new String[] {String.valueOf(folder.getId())});
     }
 

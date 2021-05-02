@@ -125,17 +125,24 @@ public class HomeFragment extends Fragment {
                         // todo update folderDb
                     }
                 });
+                // delete folder
                 editDialogBuilder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // delete folder
-                        folderDB.deleteFolder(handlingFolder.getId());
                         // update parent folder
                         Folder parentFolder = folderDB.getOneFolder(handlingFolder.getParentId());
                         List<Folder> updatedParentChildFolders = parentFolder.getChildFolders();
-                        updatedParentChildFolders.remove(handlingFolder);
+                        for (Folder childFolder: updatedParentChildFolders) {
+                            if (childFolder.getId() == handlingFolder.getId()) {
+                                updatedParentChildFolders.remove(childFolder);
+                                break;
+                            }
+                        }
                         parentFolder.setChildFolders(updatedParentChildFolders);
                         folderDB.updateFolder(parentFolder);
+
+                        // delete folder
+                        folderDB.deleteFolder(handlingFolder.getId());
 
                         // redraw scrollView
                         updateScrollView();
@@ -145,6 +152,7 @@ public class HomeFragment extends Fragment {
                 editDialogBuilder.create().show();
             }
         });
+        // create folder
         builder.setPositiveButton(R.string.create_folder, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -190,6 +198,7 @@ public class HomeFragment extends Fragment {
                 createFolderDialogBuilder.create().show();
             }
         });
+        // add url
         builder.setNegativeButton(R.string.add_url, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
