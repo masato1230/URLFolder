@@ -122,7 +122,10 @@ public class HomeFragment extends Fragment {
                 editDialogBuilder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // todo update folderDb
+                        handlingFolder.setTitle(newFolderTitle.getText().toString());
+                        folderDB.updateFolder(handlingFolder);
+                        // redraw scrollView
+                        updateScrollView();
                     }
                 });
                 // delete folder
