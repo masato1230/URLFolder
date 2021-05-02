@@ -16,4 +16,6 @@
     <string name="new_folder">New folder</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
+    <string name="title">Title</string>
+    <string name="url">URL</string>
 </resources>

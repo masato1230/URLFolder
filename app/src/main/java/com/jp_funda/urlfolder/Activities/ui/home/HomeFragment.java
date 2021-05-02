@@ -31,6 +31,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private FolderDatabaseHandler folderDB;
     private UrlDatabaseHandler urlDB;
+    private Folder rootFolder;
 
     // views
     private View root;
@@ -48,7 +49,7 @@ public class HomeFragment extends Fragment {
         scrollView = root.findViewById(R.id.scroll_view);
 
         // set folders data to views
-        Folder rootFolder = null;
+        rootFolder = null;
         for (Folder folder: folderDB.getAllFolder()) {
             if (folder.isRoot()) {
                 rootFolder = folder;
@@ -120,7 +121,7 @@ public class HomeFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 AlertDialog.Builder createFolderDialogBuilder = new AlertDialog.Builder(getActivity());
-                // todo show create folder dialog
+                // show create folder dialog
                 // create dialog Views
                 EditText titleEditText = new EditText(getActivity());
                 titleEditText.setHint("New folder title");
@@ -152,6 +153,9 @@ public class HomeFragment extends Fragment {
                         handlingFolder.setChildFolders(updatedChildFolders);
                         folderDB.updateFolder(handlingFolder);
                         dialog.dismiss();
+                        // redraw scrollView
+                        scrollView.removeAllViews();
+                        scrollView.addView(inflateFolderView(rootFolder));
                         // todo set password dialog
                     }
                 });
@@ -161,7 +165,19 @@ public class HomeFragment extends Fragment {
         builder.setNegativeButton(R.string.add_url, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // todo
+                // todo add url dialog
+                AlertDialog.Builder addUrlDialogBuilder = new AlertDialog.Builder(getActivity());
+                View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_url, null);
+                addUrlDialogBuilder.setView(dialogView);
+                addUrlDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // todo update database
+                    }
+                });
+                addUrlDialogBuilder.setNegativeButton(R.string.cancel, null);
+
+                addUrlDialogBuilder.create().show();
             }
         });
         builder.create().show();
