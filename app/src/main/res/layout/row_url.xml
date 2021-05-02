@@ -11,7 +11,6 @@
         android:layout_height="40dp"
         android:padding="7dp"
         android:src="@drawable/ic_url"
-        android:layout_marginLeft="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,7 +18,7 @@
         android:id="@+id/row_url_title"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="40dp"
         android:gravity="center_vertical"
         android:text="TitleTitle"
         android:textColor="@color/white"

@@ -165,14 +165,38 @@ public class HomeFragment extends Fragment {
         builder.setNegativeButton(R.string.add_url, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // todo add url dialog
+                // add url dialog
                 AlertDialog.Builder addUrlDialogBuilder = new AlertDialog.Builder(getActivity());
+                // initialize dialog View
                 View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_url, null);
+                EditText titleEditText = dialogView.findViewById(R.id.dialog_add_url_title_edit_text);
+                EditText urlEditText = dialogView.findViewById(R.id.dialog_add_url_url_edit_text);
+
                 addUrlDialogBuilder.setView(dialogView);
                 addUrlDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // todo update database
+                        // add url data to database
+                        Url newUrl = new Url();
+                        newUrl.setTitle(titleEditText.getText().toString());
+                        newUrl.setUrl(urlEditText.getText().toString());
+                        newUrl.setAddedDate(new Date());
+                        newUrl.setBrowsingDate(new Date());
+                        newUrl.setFolderId(handlingFolder.getId());
+                        int newUrlId = (int) urlDB.addUrl(newUrl);
+
+                        // update folder data with newUrl
+                        List<Url> newUrls = new ArrayList<>();
+                        if (handlingFolder.getUrls() != null) {
+                            newUrls = handlingFolder.getUrls();
+                        }
+                        newUrls.add(urlDB.getOneUrl(newUrlId));
+                        handlingFolder.setUrls(newUrls);
+                        folderDB.updateFolder(handlingFolder);
+
+                        // redraw scrollView
+                        scrollView.removeAllViews();
+                        scrollView.addView(inflateFolderView(rootFolder));
                     }
                 });
                 addUrlDialogBuilder.setNegativeButton(R.string.cancel, null);
