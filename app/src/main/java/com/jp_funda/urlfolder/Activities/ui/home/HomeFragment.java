@@ -125,23 +125,62 @@ public class HomeFragment extends Fragment {
         TextView urlTitle = rowUrlView.findViewById(R.id.row_url_title);
 
         // set Data to views
+        rowUrlView.setTag(url);
         urlTitle.setText(url.getTitle());
+
+        // ClickListeners
+        rowUrlView.setOnClickListener(this::onRowUrlClick);
 
         return rowUrlView;
     }
 
     // click listeners
+    private void onRowUrlClick(View view) {
+        Url handlingUrl = (Url) view.getTag();
+
+        // show dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_url_management, null);
+        builder.setTitle(handlingUrl.getTitle());
+        builder.setView(dialogView);
+        // todo initialize view
+
+        // buttons
+        builder.setNegativeButton(R.string.copy_url, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // todo
+            }
+        });
+        builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // todo
+            }
+        });
+        builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // tod0
+            }
+        });
+
+        builder.create().show();
+
+    }
+
     private void onRowFolderClick(View view) {
         Folder handlingFolder = (Folder) view.getTag();
 
         // show dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
         builder.setTitle("Select what to do with " + handlingFolder.getTitle() +  " folder");
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AlertDialog.Builder editDialogBuilder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder editDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
                 EditText newFolderTitle = new EditText(getActivity());
+                newFolderTitle.setTextColor(getActivity().getResources().getColor(R.color.white));
                 newFolderTitle.setHint("New folder title");
 
                 editDialogBuilder.setTitle("Edit / Delete folder");
@@ -187,10 +226,11 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                AlertDialog.Builder createFolderDialogBuilder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder createFolderDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
                 // show create folder dialog
                 // create dialog Views
                 EditText titleEditText = new EditText(getActivity());
+                titleEditText.setTextColor(getActivity().getResources().getColor(R.color.white));
                 titleEditText.setHint("New folder title");
 
                 // set views to dialog builder
@@ -233,7 +273,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // add url dialog
-                AlertDialog.Builder addUrlDialogBuilder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder addUrlDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+                addUrlDialogBuilder.setTitle(R.string.add_url);
                 // initialize dialog View
                 View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_url, null);
                 EditText titleEditText = dialogView.findViewById(R.id.dialog_add_url_title_edit_text);
@@ -247,28 +288,7 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        // todo delete
-
                         new DownloadOgpImageTask(imageView).execute(s.toString());
-
-//                        new Thread() {
-//                            @Override
-//                            public void run() {
-//                                Elements elements = null;
-//                                try {
-//                                    elements = OGP.getOgpImage("https://qiita.com/shikato/items/40ce3955cb7975ad4e2b");
-//                                    for (Element element : elements) {
-//                                        System.out.println(element.attr("content"));
-//                                        String url = element.attr("content");
-//                                        InputStream inputStream = new java.net.URL(url).openStream();
-//                                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                                        imageView.setImageBitmap(bitmap);
-//                                    }
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        }.start();
                     }
 
                     @Override

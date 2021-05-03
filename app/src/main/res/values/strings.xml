@@ -20,4 +20,6 @@
     <string name="url">URL</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="open">Open</string>
 </resources>
