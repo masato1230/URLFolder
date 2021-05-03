@@ -12,6 +12,26 @@ public class OGP {
         return document.select("meta[property~=og:*]");
     }
 
+    public static Elements getOgpTitle(String url) throws IOException {
+        Document document = null;
+        try {
+            document = Jsoup.connect(url).get();
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return null;
+        }
+        return document.getElementsByAttributeValue("property", "og:title");
+    }
+
+    public static Elements getOgpDescription(String url) throws IOException {
+        Document document = null;
+        try {
+            document = Jsoup.connect(url).get();
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return null;
+        }
+        return document.getElementsByAttributeValue("property", "og:description");
+    }
+
     public static Elements getOgpImage(String url) throws IOException {
         Document document = null;
         try {

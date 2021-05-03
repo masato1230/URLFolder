@@ -33,11 +33,14 @@ import com.jp_funda.urlfolder.Database.UrlDatabaseHandler;
 import com.jp_funda.urlfolder.Models.Folder;
 import com.jp_funda.urlfolder.Models.Url;
 import com.jp_funda.urlfolder.R;
+import com.jp_funda.urlfolder.Utils.DownloadOgpDeskTask;
 import com.jp_funda.urlfolder.Utils.DownloadOgpImageTask;
+import com.jp_funda.urlfolder.Utils.DownloadOgpTitleTask;
 import com.jp_funda.urlfolder.Utils.OGP;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -156,11 +159,15 @@ public class HomeFragment extends Fragment {
         TextView addedDateText = dialogView.findViewById(R.id.dialog_url_management_added_date);
         TextView browsedDateText = dialogView.findViewById(R.id.dialog_url_management_browsed_date);
         ImageView imageView = dialogView.findViewById(R.id.dialog_url_management_image);
+        TextView ogpTitle = dialogView.findViewById(R.id.dialog_url_management_title);
+        TextView ogpDesk = dialogView.findViewById(R.id.dialog_url_management_desk);
         // set data to Views
         memo.setText(handlingUrl.getMemo());
         addedDateText.setText(UrlConstants.dateFormat.format(handlingUrl.getAddedDate()));
         browsedDateText.setText(UrlConstants.dateFormat.format(handlingUrl.getBrowsingDate()));
         new DownloadOgpImageTask(imageView).execute(handlingUrl.getUrl());
+        new DownloadOgpTitleTask(ogpTitle).execute(handlingUrl.getUrl());
+        new DownloadOgpDeskTask(ogpDesk).execute(handlingUrl.getUrl());
 
         builder.setView(dialogView);
 
@@ -178,7 +185,6 @@ public class HomeFragment extends Fragment {
         });
         builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
             @Override
-            // todo
             public void onClick(DialogInterface dialog, int which) {
                 Uri uri =  Uri.parse(handlingUrl.getUrl());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -190,7 +196,7 @@ public class HomeFragment extends Fragment {
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // tod0
+                // todo
             }
         });
 
