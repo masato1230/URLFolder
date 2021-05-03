@@ -1,4 +1,4 @@
-package com.jp_funda.urlfolder.Activities.ui.gallery;
+package com.jp_funda.urlfolder.Activities.ui.settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.jp_funda.urlfolder.R;
 
-public class GalleryFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;
 

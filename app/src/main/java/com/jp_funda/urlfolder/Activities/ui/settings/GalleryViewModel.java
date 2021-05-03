@@ -1,4 +1,4 @@
-package com.jp_funda.urlfolder.Activities.ui.gallery;
+package com.jp_funda.urlfolder.Activities.ui.settings;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
