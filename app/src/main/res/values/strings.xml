@@ -22,4 +22,5 @@
     <string name="delete">Delete</string>
     <string name="copy_url">Copy URL</string>
     <string name="open">Open</string>
+    <string name="memo">Memo</string>
 </resources>

@@ -200,7 +200,66 @@ public class HomeFragment extends Fragment {
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // todo
+                // todo show dialog => title, memo, url, delete
+                AlertDialog.Builder editDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+                editDialogBuilder.setTitle("Edit / Delete the url");
+                View editDialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_url, null);
+                // initialize dialogView
+                EditText titleEditText = editDialogView.findViewById(R.id.dialog_url_edit_title_edit_text);
+                EditText memoEditText = editDialogView.findViewById(R.id.dialog_url_edit_memo_edit_text);
+                EditText urlEditText = editDialogView.findViewById(R.id.dialog_url_edit_url_edit_text);
+                ImageView imageView = editDialogView.findViewById(R.id.dialog_url_edit_image);
+                // set data to views
+                titleEditText.setText(handlingUrl.getTitle());
+                memoEditText.setText(handlingUrl.getMemo());
+                urlEditText.setText(handlingUrl.getUrl());
+                new DownloadOgpImageTask(imageView).execute(handlingUrl.getUrl());
+                urlEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        new DownloadOgpImageTask(imageView).execute(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+                editDialogBuilder.setView(editDialogView);
+                editDialogBuilder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // todo delete handling url data
+                        // update folder data
+                        Folder folder = folderDB.getOneFolder(handlingUrl.getFolderId());
+                        for (Url url: folder.getUrls()) {
+                            if (url.getId() == handlingUrl.getId()) {
+                                List<Url> updatedUrls = folder.getUrls();
+                                updatedUrls.remove(url);
+                                folder.setUrls(updatedUrls);
+                                break;
+                            }
+                        }
+                        folderDB.updateFolder(folder);
+                        // delete url data
+                        urlDB.deleteUrl(handlingUrl.getId());
+                        // redraw scrollView
+                        updateScrollView();
+                    }
+                });
+                editDialogBuilder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handlingUrl.setTitle(titleEditText.getText().toString());
+                        handlingUrl.setMemo(memoEditText.getText().toString());
+                        handlingUrl.setUrl(urlEditText.getText().toString());
+                        // update database
+                        urlDB.update(handlingUrl);
+                        updateScrollView();
+                    }
+                });
+                editDialogBuilder.create().show();
             }
         });
 
