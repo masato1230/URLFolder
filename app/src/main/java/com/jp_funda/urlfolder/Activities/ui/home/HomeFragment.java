@@ -2,7 +2,11 @@ package com.jp_funda.urlfolder.Activities.ui.home;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.transition.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +26,14 @@ import com.jp_funda.urlfolder.Database.UrlDatabaseHandler;
 import com.jp_funda.urlfolder.Models.Folder;
 import com.jp_funda.urlfolder.Models.Url;
 import com.jp_funda.urlfolder.R;
+import com.jp_funda.urlfolder.Utils.DownloadOgpImageTask;
+import com.jp_funda.urlfolder.Utils.OGP;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -227,6 +238,44 @@ public class HomeFragment extends Fragment {
                 View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_url, null);
                 EditText titleEditText = dialogView.findViewById(R.id.dialog_add_url_title_edit_text);
                 EditText urlEditText = dialogView.findViewById(R.id.dialog_add_url_url_edit_text);
+                ImageView imageView = dialogView.findViewById(R.id.dialog_add_url_image);
+
+                // show og:image
+                urlEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        // todo delete
+
+                        new DownloadOgpImageTask(imageView).execute(s.toString());
+
+//                        new Thread() {
+//                            @Override
+//                            public void run() {
+//                                Elements elements = null;
+//                                try {
+//                                    elements = OGP.getOgpImage("https://qiita.com/shikato/items/40ce3955cb7975ad4e2b");
+//                                    for (Element element : elements) {
+//                                        System.out.println(element.attr("content"));
+//                                        String url = element.attr("content");
+//                                        InputStream inputStream = new java.net.URL(url).openStream();
+//                                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                                        imageView.setImageBitmap(bitmap);
+//                                    }
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }.start();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
 
                 addUrlDialogBuilder.setView(dialogView);
                 addUrlDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
