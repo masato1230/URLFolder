@@ -3,6 +3,7 @@ package com.jp_funda.urlfolder.Activities.ui.home;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.transition.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,21 @@ public class HomeFragment extends Fragment {
 
         // clickListeners
         rowFolderView.setOnClickListener(this::onRowFolderClick);
+        folderStatusImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (folderContainer.getVisibility() == View.VISIBLE) {
+                    // rotate the status image
+                    folderStatusImage.setRotation(0);
+                    // set visibility
+                    folderContainer.setVisibility(View.GONE);
+                } else {
+                    // rotate the status image
+                    folderStatusImage.setRotation(90);
+                    folderContainer.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         // inflate child folders
         if (folder.getChildFolders() != null) {

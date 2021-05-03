@@ -10,6 +10,7 @@
         android:id="@+id/row_folder_status_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:rotation="90"
         android:src="@drawable/ic_folder_status"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
