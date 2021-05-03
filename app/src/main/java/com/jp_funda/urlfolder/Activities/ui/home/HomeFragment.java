@@ -1,7 +1,11 @@
 package com.jp_funda.urlfolder.Activities.ui.home;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -21,7 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.jp_funda.urlfolder.Database.FolderDatabaseHandler;
+import com.jp_funda.urlfolder.Database.UrlConstants;
 import com.jp_funda.urlfolder.Database.UrlDatabaseHandler;
 import com.jp_funda.urlfolder.Models.Folder;
 import com.jp_funda.urlfolder.Models.Url;
@@ -142,20 +148,42 @@ public class HomeFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
         View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_url_management, null);
         builder.setTitle(handlingUrl.getTitle());
+
+        // initialize dialogView
+        TextView memo = dialogView.findViewById(R.id.dialog_url_management_memo);
+        TextView addedDateText = dialogView.findViewById(R.id.dialog_url_management_added_date);
+        TextView browsedDateText = dialogView.findViewById(R.id.dialog_url_management_browsed_date);
+        ImageView imageView = dialogView.findViewById(R.id.dialog_url_management_image);
+        // set data to Views
+        memo.setText(handlingUrl.getMemo());
+        addedDateText.setText(UrlConstants.dateFormat.format(handlingUrl.getAddedDate()));
+        browsedDateText.setText(UrlConstants.dateFormat.format(handlingUrl.getBrowsingDate()));
+        new DownloadOgpImageTask(imageView).execute(handlingUrl.getUrl());
+
         builder.setView(dialogView);
-        // todo initialize view
 
         // buttons
         builder.setNegativeButton(R.string.copy_url, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // todo
+                // copy to clipboard
+                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setPrimaryClip(ClipData.newPlainText("", handlingUrl.getUrl()));
+                // notify by snackBar
+                Snackbar.make(view, "Link copied", Snackbar.LENGTH_LONG)
+                        .setAction("", null).show();
             }
         });
         builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
             @Override
+            // todo
             public void onClick(DialogInterface dialog, int which) {
-                // todo
+                String packageName = "com.android.browser";
+                String className = "com.android.browser.BrowserActivity";
+                Intent internetIntent = new Intent(Intent.ACTION_VIEW);
+                internetIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                internetIntent.setClassName(packageName, className);
+                getActivity().startActivity(internetIntent);
             }
         });
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
