@@ -191,6 +191,10 @@ public class HomeFragment extends Fragment {
                 // Create and start the chooser
                 Intent chooser = Intent.createChooser(intent, "Open with");
                 getActivity().startActivity(chooser);
+
+                // update browse date
+                handlingUrl.setBrowsingDate(new Date());
+                urlDB.update(handlingUrl);
             }
         });
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
