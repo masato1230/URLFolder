@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,6 +41,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -178,12 +180,11 @@ public class HomeFragment extends Fragment {
             @Override
             // todo
             public void onClick(DialogInterface dialog, int which) {
-                String packageName = "com.android.browser";
-                String className = "com.android.browser.BrowserActivity";
-                Intent internetIntent = new Intent(Intent.ACTION_VIEW);
-                internetIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                internetIntent.setClassName(packageName, className);
-                getActivity().startActivity(internetIntent);
+                Uri uri =  Uri.parse(handlingUrl.getUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                // Create and start the chooser
+                Intent chooser = Intent.createChooser(intent, "Open with");
+                getActivity().startActivity(chooser);
             }
         });
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
