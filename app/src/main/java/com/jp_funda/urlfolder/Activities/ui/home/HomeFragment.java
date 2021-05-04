@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -99,6 +100,11 @@ public class HomeFragment extends Fragment {
         // set Data to views
         rowFolderView.setTag(folder);
         folderTitle.setText(folder.getTitle());
+        // if password is set, set initial visibility as gone
+        if (folder.isSecret()) {
+            folderStatusImage.setRotation(0);
+            folderContainer.setVisibility(View.GONE);
+        }
 
         // clickListeners
         rowFolderView.setOnClickListener(this::onRowFolderClick);
@@ -111,9 +117,33 @@ public class HomeFragment extends Fragment {
                     // set visibility
                     folderContainer.setVisibility(View.GONE);
                 } else {
-                    // rotate the status image
-                    folderStatusImage.setRotation(90);
-                    folderContainer.setVisibility(View.VISIBLE);
+                    if (folder.isSecret()) {
+                        // show password set dialog
+                        AlertDialog.Builder checkPassDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+                        checkPassDialogBuilder.setTitle(R.string.password);
+                        EditText passwordEditText = new EditText(getActivity());
+                        passwordEditText.setTextColor(Color.WHITE);
+                        passwordEditText.setHint(R.string.password);
+                        checkPassDialogBuilder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (passwordEditText.getText().toString().equals(folder.getPassword())) {
+                                    folderStatusImage.setRotation(90);
+                                    folderContainer.setVisibility(View.VISIBLE);
+                                    dialog.dismiss();
+                                } else {
+                                    Snackbar.make(v, "Password is incorrect", Snackbar.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        checkPassDialogBuilder.setView(passwordEditText);
+                        checkPassDialogBuilder.setNegativeButton(R.string.cancel, null);
+                        checkPassDialogBuilder.create().show();
+                    } else {
+                        // rotate the status image
+                        folderStatusImage.setRotation(90);
+                        folderContainer.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -205,7 +235,7 @@ public class HomeFragment extends Fragment {
         builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // todo show dialog => title, memo, url, delete
+                // show dialog => title, memo, url, delete
                 AlertDialog.Builder editDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
                 editDialogBuilder.setTitle("Edit / Delete the url");
                 View editDialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_url, null);
@@ -235,7 +265,7 @@ public class HomeFragment extends Fragment {
                 editDialogBuilder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // todo delete handling url data
+                        // delete handling url data
                         // update folder data
                         Folder folder = folderDB.getOneFolder(handlingUrl.getFolderId());
                         for (Url url: folder.getUrls()) {
