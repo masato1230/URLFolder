@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.jp_funda.urlfolder.Activities.ui.settings.GalleryViewModel;
 import com.jp_funda.urlfolder.Activities.ui.settings.SettingsFragment;
 import com.jp_funda.urlfolder.Database.FolderDatabaseHandler;
 import com.jp_funda.urlfolder.Database.UrlDatabaseHandler;
@@ -22,6 +23,7 @@ import com.jp_funda.urlfolder.R;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -62,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        // initialize ViewModel
+        MainActivityViewModel mainActivityViewModel =
+                new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         // 初回起動の判定を行う
         SharedPreferences prefs = getSharedPreferences("IsFirstPref", Context.MODE_PRIVATE);

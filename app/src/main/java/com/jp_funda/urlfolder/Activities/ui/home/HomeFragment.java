@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.jp_funda.urlfolder.Activities.MainActivityViewModel;
 import com.jp_funda.urlfolder.Database.FolderDatabaseHandler;
 import com.jp_funda.urlfolder.Database.UrlConstants;
 import com.jp_funda.urlfolder.Database.UrlDatabaseHandler;
@@ -56,6 +57,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     // data
     private HomeViewModel homeViewModel;
+    private MainActivityViewModel mainActivityViewModel;
     private FolderDatabaseHandler folderDB;
     private UrlDatabaseHandler urlDB;
     private Folder rootFolder;
@@ -70,6 +72,9 @@ public class HomeFragment extends Fragment {
         folderDB = new FolderDatabaseHandler(getActivity());
         urlDB = new UrlDatabaseHandler(getActivity());
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+        // initialize ViewModel
+        mainActivityViewModel = new ViewModelProvider(getActivity()).get(MainActivityViewModel.class);
 
         // initialize Views
         root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -308,52 +313,54 @@ public class HomeFragment extends Fragment {
         // show dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
         builder.setTitle("Select what to do with " + handlingFolder.getTitle() +  " folder");
-        builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                AlertDialog.Builder editDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
-                EditText newFolderTitle = new EditText(getActivity());
-                newFolderTitle.setTextColor(getActivity().getResources().getColor(R.color.white));
-                newFolderTitle.setHint("New folder title");
+        if (!handlingFolder.isRoot()) {
+            builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    AlertDialog.Builder editDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+                    EditText newFolderTitle = new EditText(getActivity());
+                    newFolderTitle.setTextColor(getActivity().getResources().getColor(R.color.white));
+                    newFolderTitle.setHint("New folder title");
 
-                editDialogBuilder.setTitle("Edit / Delete folder");
-                editDialogBuilder.setView(newFolderTitle);
-                editDialogBuilder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        handlingFolder.setTitle(newFolderTitle.getText().toString());
-                        folderDB.updateFolder(handlingFolder);
-                        // redraw scrollView
-                        updateScrollView();
-                    }
-                });
-                // delete folder
-                editDialogBuilder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // update parent folder
-                        Folder parentFolder = folderDB.getOneFolder(handlingFolder.getParentId());
-                        List<Folder> updatedParentChildFolders = parentFolder.getChildFolders();
-                        for (Folder childFolder: updatedParentChildFolders) {
-                            if (childFolder.getId() == handlingFolder.getId()) {
-                                updatedParentChildFolders.remove(childFolder);
-                                break;
-                            }
+                    editDialogBuilder.setTitle("Edit / Delete folder");
+                    editDialogBuilder.setView(newFolderTitle);
+                    editDialogBuilder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            handlingFolder.setTitle(newFolderTitle.getText().toString());
+                            folderDB.updateFolder(handlingFolder);
+                            // redraw scrollView
+                            updateScrollView();
                         }
-                        parentFolder.setChildFolders(updatedParentChildFolders);
-                        folderDB.updateFolder(parentFolder);
+                    });
+                    // delete folder
+                    editDialogBuilder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // update parent folder
+                            Folder parentFolder = folderDB.getOneFolder(handlingFolder.getParentId());
+                            List<Folder> updatedParentChildFolders = parentFolder.getChildFolders();
+                            for (Folder childFolder: updatedParentChildFolders) {
+                                if (childFolder.getId() == handlingFolder.getId()) {
+                                    updatedParentChildFolders.remove(childFolder);
+                                    break;
+                                }
+                            }
+                            parentFolder.setChildFolders(updatedParentChildFolders);
+                            folderDB.updateFolder(parentFolder);
 
-                        // delete folder
-                        folderDB.deleteFolder(handlingFolder.getId());
+                            // delete folder
+                            folderDB.deleteFolder(handlingFolder.getId());
 
-                        // redraw scrollView
-                        updateScrollView();
-                    }
-                });
-                editDialogBuilder.setNeutralButton(R.string.cancel, null);
-                editDialogBuilder.create().show();
-            }
-        });
+                            // redraw scrollView
+                            updateScrollView();
+                        }
+                    });
+                    editDialogBuilder.setNeutralButton(R.string.cancel, null);
+                    editDialogBuilder.create().show();
+                }
+            });
+        }
         // create folder
         builder.setPositiveButton(R.string.create_folder, new DialogInterface.OnClickListener() {
             @Override
@@ -413,9 +420,8 @@ public class HomeFragment extends Fragment {
                         handlingFolder.setChildFolders(updatedChildFolders);
                         folderDB.updateFolder(handlingFolder);
                         dialog.dismiss();
-                        // redraw scrollView
+                        // redraw containerView
                         updateScrollView();
-                        // todo set password dialog
                     }
                 });
                 createFolderDialogBuilder.create().show();
