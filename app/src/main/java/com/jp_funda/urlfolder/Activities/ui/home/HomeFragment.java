@@ -113,8 +113,8 @@ public class HomeFragment extends Fragment {
 
         // if folder is included in closing folder then set Visibility GONE
         for (Integer closingFolderInteger: mainActivityViewModel.closingFolderIdList) {
-            folderStatusImage.setRotation(0);
             if (closingFolderInteger.intValue() == folder.getId()) {
+                folderStatusImage.setRotation(0);
                 folderContainer.setVisibility(View.GONE);
                 break;
             }
@@ -141,7 +141,7 @@ public class HomeFragment extends Fragment {
                         }
                     }
 
-                    // rotate and visibirity
+                    // rotate and visibility
                     if (folder.isSecret()) {
                         // show password set dialog
                         AlertDialog.Builder checkPassDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
@@ -440,6 +440,13 @@ public class HomeFragment extends Fragment {
                         handlingFolder.setChildFolders(updatedChildFolders);
                         folderDB.updateFolder(handlingFolder);
                         dialog.dismiss();
+
+                        // if handlingFolder is closed, open handlingFolder
+                        for (Integer closingFolderInteger: mainActivityViewModel.closingFolderIdList) {
+                            if (closingFolderInteger.intValue() == handlingFolder.getId()) {
+                                mainActivityViewModel.closingFolderIdList.remove(closingFolderInteger);
+                            }
+                        }
                         // redraw containerView
                         updateScrollView();
                     }
@@ -497,6 +504,13 @@ public class HomeFragment extends Fragment {
                         newUrls.add(urlDB.getOneUrl(newUrlId));
                         handlingFolder.setUrls(newUrls);
                         folderDB.updateFolder(handlingFolder);
+
+                        // if handlingFolder is closed, open handlingFolder
+                        for (Integer closingFolderInteger: mainActivityViewModel.closingFolderIdList) {
+                            if (closingFolderInteger.intValue() == handlingFolder.getId()) {
+                                mainActivityViewModel.closingFolderIdList.remove(closingFolderInteger);
+                            }
+                        }
 
                         // redraw scrollView
                         updateScrollView();
