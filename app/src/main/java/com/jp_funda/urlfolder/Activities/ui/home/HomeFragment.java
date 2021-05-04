@@ -111,6 +111,15 @@ public class HomeFragment extends Fragment {
             folderContainer.setVisibility(View.GONE);
         }
 
+        // if folder is included in closing folder then set Visibility GONE
+        for (Integer closingFolderInteger: mainActivityViewModel.closingFolderIdList) {
+            folderStatusImage.setRotation(0);
+            if (closingFolderInteger.intValue() == folder.getId()) {
+                folderContainer.setVisibility(View.GONE);
+                break;
+            }
+        }
+
         // clickListeners
         rowFolderView.setOnClickListener(this::onRowFolderClick);
         folderStatusImage.setOnClickListener(new View.OnClickListener() {
@@ -119,9 +128,20 @@ public class HomeFragment extends Fragment {
                 if (folderContainer.getVisibility() == View.VISIBLE) {
                     // rotate the status image
                     folderStatusImage.setRotation(0);
+                    // add to closingFolderList
+                    mainActivityViewModel.closingFolderIdList.add(folder.getId());
                     // set visibility
                     folderContainer.setVisibility(View.GONE);
                 } else {
+                    // update viewModel
+                    for (Integer closingFolderInteger: mainActivityViewModel.closingFolderIdList) {
+                        if (folder.getId() == closingFolderInteger.intValue()) {
+                            mainActivityViewModel.closingFolderIdList.remove(closingFolderInteger);
+                            break;
+                        }
+                    }
+
+                    // rotate and visibirity
                     if (folder.isSecret()) {
                         // show password set dialog
                         AlertDialog.Builder checkPassDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);

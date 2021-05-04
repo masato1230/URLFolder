@@ -5,5 +5,5 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 
 public class MainActivityViewModel extends ViewModel {
-    public ArrayList<Integer> closingFolderIdList;
+    public ArrayList<Integer> closingFolderIdList = new ArrayList<>();
 }
