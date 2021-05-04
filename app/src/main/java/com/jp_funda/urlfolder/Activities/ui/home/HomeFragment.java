@@ -155,6 +155,7 @@ public class HomeFragment extends Fragment {
         builder.setTitle(handlingUrl.getTitle());
 
         // initialize dialogView
+        TextView urlText = dialogView.findViewById(R.id.dialog_url_management_url);
         TextView memo = dialogView.findViewById(R.id.dialog_url_management_memo);
         TextView addedDateText = dialogView.findViewById(R.id.dialog_url_management_added_date);
         TextView browsedDateText = dialogView.findViewById(R.id.dialog_url_management_browsed_date);
@@ -162,9 +163,10 @@ public class HomeFragment extends Fragment {
         TextView ogpTitle = dialogView.findViewById(R.id.dialog_url_management_title);
         TextView ogpDesk = dialogView.findViewById(R.id.dialog_url_management_desk);
         // set data to Views
+        urlText.setText(handlingUrl.getUrl());
         memo.setText(handlingUrl.getMemo());
-        addedDateText.setText(UrlConstants.dateFormat.format(handlingUrl.getAddedDate()));
-        browsedDateText.setText(UrlConstants.dateFormat.format(handlingUrl.getBrowsingDate()));
+        addedDateText.setText("Add: " + UrlConstants.dateFormat.format(handlingUrl.getAddedDate()));
+        browsedDateText.setText("Browse: " + UrlConstants.dateFormat.format(handlingUrl.getBrowsingDate()));
         new DownloadOgpImageTask(imageView).execute(handlingUrl.getUrl());
         new DownloadOgpTitleTask(ogpTitle).execute(handlingUrl.getUrl());
         new DownloadOgpDeskTask(ogpDesk).execute(handlingUrl.getUrl());
