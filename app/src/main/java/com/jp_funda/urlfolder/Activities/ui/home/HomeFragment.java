@@ -11,11 +11,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.transition.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -329,14 +332,30 @@ public class HomeFragment extends Fragment {
                 AlertDialog.Builder createFolderDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
                 // show create folder dialog
                 // create dialog Views
-                EditText titleEditText = new EditText(getActivity());
-                titleEditText.setTextColor(getActivity().getResources().getColor(R.color.white));
-                titleEditText.setHint("New folder title");
+                View createFolderDialogView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_create_folder, null);
+
+                // initialize Views
+                EditText titleEditText = createFolderDialogView.findViewById(R.id.dialog_create_folder_title);
+                CheckBox setPassCheckbox = createFolderDialogView.findViewById(R.id.dialog_create_folder_checkbox);
+                LinearLayout setPassContainer = createFolderDialogView.findViewById(R.id.dialog_create_folder_pass_set_container);
+                EditText passwordEditText = createFolderDialogView.findViewById(R.id.dialog_create_folder_password);
+                setPassContainer.setVisibility(View.GONE);
+                setPassCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            setPassContainer.setVisibility(View.VISIBLE);
+                        } else {
+                            setPassContainer.setVisibility(View.GONE);
+                        }
+
+                    }
+                });
 
                 // set views to dialog builder
                 createFolderDialogBuilder.setTitle(R.string.new_folder);
                 createFolderDialogBuilder.setMessage("Please enter a title for the new folder");
-                createFolderDialogBuilder.setView(titleEditText);
+                createFolderDialogBuilder.setView(createFolderDialogView);
                 createFolderDialogBuilder.setNegativeButton(R.string.cancel, null);
                 createFolderDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override

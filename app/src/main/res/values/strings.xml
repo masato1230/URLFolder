@@ -23,4 +23,6 @@
     <string name="copy_url">Copy URL</string>
     <string name="open">Open</string>
     <string name="memo">Memo</string>
+    <string name="set_password">Set password</string>
+    <string name="password">Password</string>
 </resources>
