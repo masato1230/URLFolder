@@ -365,6 +365,10 @@ public class HomeFragment extends Fragment {
                         newFolder.setTitle(titleEditText.getText().toString());
                         newFolder.setCreatedDate(new Date());
                         newFolder.setParentId(handlingFolder.getId());
+                        if (setPassCheckbox.isChecked()) {
+                            newFolder.setSecret(true);
+                            newFolder.setPassword(passwordEditText.getText().toString());
+                        }
                         int newFolderID = (int) folderDB.addFolder(newFolder);
                         // update newFolder by database
                         newFolder = folderDB.getOneFolder(newFolderID);

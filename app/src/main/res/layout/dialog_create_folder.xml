@@ -41,6 +41,7 @@
 
         <EditText
             android:id="@+id/dialog_create_folder_password"
+            android:hint="@string/password_cannot_be_changed"
             android:inputType="textPassword"
             android:textColor="@color/white"
             android:layout_width="match_parent"
