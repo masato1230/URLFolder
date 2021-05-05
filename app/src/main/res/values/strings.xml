@@ -27,4 +27,6 @@
     <string name="password">Password</string>
     <string name="password_cannot_be_changed">NOTE: Password cannot be changed</string>
     <string name="please_enter_the_password">Please enter the password</string>
+    <string name="opened_all_folder">Opened all folders</string>
+    <string name="closed_all_folder">Closed all folders</string>
 </resources>

@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.jp_funda.urlfolder.Activities.MainActivityViewModel;
 import com.jp_funda.urlfolder.Database.FolderDatabaseHandler;
@@ -65,6 +66,7 @@ public class HomeFragment extends Fragment {
     // views
     private View root;
     private ScrollView scrollView;
+    private FloatingActionButton floatButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +81,28 @@ public class HomeFragment extends Fragment {
         // initialize Views
         root = inflater.inflate(R.layout.fragment_home, container, false);
         scrollView = root.findViewById(R.id.scroll_view);
+        floatButton = root.findViewById(R.id.fab);
+
+        // Click Listener
+        floatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (floatButton.getRotation() == 90f) {
+                    // open all folder
+                    floatButton.setRotation(-90f);
+                    mainActivityViewModel.closingFolderIdList.clear();
+                    Snackbar.make(v, R.string.opened_all_folder, Snackbar.LENGTH_SHORT).show();
+                } else {
+                    // close all folder
+                    floatButton.setRotation(90f);
+                    for (Folder folder: folderDB.getAllFolder()) {
+                        mainActivityViewModel.closingFolderIdList.add(new Integer(folder.getId()));
+                    }
+                    Snackbar.make(v, R.string.closed_all_folder, Snackbar.LENGTH_SHORT).show();
+                }
+                updateScrollView();
+            }
+        });
 
         // set folders data to views
         rootFolder = null;
