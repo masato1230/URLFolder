@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -397,23 +398,56 @@ public class HomeFragment extends Fragment {
                     editDialogBuilder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // update parent folder
-                            Folder parentFolder = folderDB.getOneFolder(handlingFolder.getParentId());
-                            List<Folder> updatedParentChildFolders = parentFolder.getChildFolders();
-                            for (Folder childFolder: updatedParentChildFolders) {
-                                if (childFolder.getId() == handlingFolder.getId()) {
-                                    updatedParentChildFolders.remove(childFolder);
-                                    break;
+                            if (isFolderSafeDelete) {
+                                // show confirmation dialog
+                                AlertDialog.Builder deleteConfirmDialogBuilder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+                                deleteConfirmDialogBuilder.setTitle(handlingFolder.getTitle());
+                                deleteConfirmDialogBuilder.setMessage("Do you want to delete " + handlingFolder.getTitle() + " folder ?");
+                                deleteConfirmDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // update parent folder
+                                        Folder parentFolder = folderDB.getOneFolder(handlingFolder.getParentId());
+                                        List<Folder> updatedParentChildFolders = parentFolder.getChildFolders();
+                                        for (Folder childFolder: updatedParentChildFolders) {
+                                            if (childFolder.getId() == handlingFolder.getId()) {
+                                                updatedParentChildFolders.remove(childFolder);
+                                                break;
+                                            }
+                                        }
+                                        parentFolder.setChildFolders(updatedParentChildFolders);
+                                        folderDB.updateFolder(parentFolder);
+
+                                        // delete folder
+                                        folderDB.deleteFolder(handlingFolder.getId());
+
+                                        // redraw scrollView
+                                        updateScrollView();
+                                        Toast.makeText(getActivity(), "Deleted " + handlingFolder.getTitle() + " folder", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                deleteConfirmDialogBuilder.setNegativeButton(R.string.cancel, null);
+                                deleteConfirmDialogBuilder.create().show();
+                            } else {
+                                // update parent folder
+                                Folder parentFolder = folderDB.getOneFolder(handlingFolder.getParentId());
+                                List<Folder> updatedParentChildFolders = parentFolder.getChildFolders();
+                                for (Folder childFolder: updatedParentChildFolders) {
+                                    if (childFolder.getId() == handlingFolder.getId()) {
+                                        updatedParentChildFolders.remove(childFolder);
+                                        break;
+                                    }
                                 }
+                                parentFolder.setChildFolders(updatedParentChildFolders);
+                                folderDB.updateFolder(parentFolder);
+
+                                // delete folder
+                                folderDB.deleteFolder(handlingFolder.getId());
+
+                                // redraw scrollView
+                                updateScrollView();
+                                Toast.makeText(getActivity(), "Deleted " + handlingFolder.getTitle() + " folder", Toast.LENGTH_SHORT).show();
                             }
-                            parentFolder.setChildFolders(updatedParentChildFolders);
-                            folderDB.updateFolder(parentFolder);
-
-                            // delete folder
-                            folderDB.deleteFolder(handlingFolder.getId());
-
-                            // redraw scrollView
-                            updateScrollView();
                         }
                     });
                     editDialogBuilder.setNeutralButton(R.string.cancel, null);
