@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="dialog_delete_dialog_check_box"
+        android:summary="Check if you want to display a confirmation screen when deleting a folder"
+        android:title="@string/folder_delete_dialog" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="float_button_show_checkbox"
+        android:summary="Check if you want to display open/close all folder button"
+        android:title="@string/floating_button"/>
+</PreferenceScreen>

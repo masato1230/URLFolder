@@ -3,10 +3,6 @@ package com.jp_funda.urlfolder.Activities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Menu;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -14,20 +10,13 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.jp_funda.urlfolder.Activities.ui.settings.GalleryViewModel;
-import com.jp_funda.urlfolder.Activities.ui.settings.SettingsFragment;
 import com.jp_funda.urlfolder.Database.FolderDatabaseHandler;
 import com.jp_funda.urlfolder.Database.UrlDatabaseHandler;
 import com.jp_funda.urlfolder.Models.Folder;
 import com.jp_funda.urlfolder.Models.Url;
 import com.jp_funda.urlfolder.R;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -38,7 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.Date;
-import java.util.function.Predicate;
 
 public class MainActivity extends AppCompatActivity {
     // Ad
@@ -63,14 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
