@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
             // create url => google.com and add to folder
             Url url = new Url();
-            url.setTitle("google");
-            url.setUrl("https://www.google.com/");
-            url.setMemo("url example");
+            url.setTitle("Example bookmark");
+            url.setUrl("https://www.jp-funda.com/en");
+            url.setMemo("URL example(Developer's site)");
             url.setAddedDate(new Date());
             url.setBrowsingDate(new Date());
             url.setFolderId(1);
